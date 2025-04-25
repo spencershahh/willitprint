@@ -7,18 +7,18 @@ export default {
   theme: {
     extend: {
       colors: {
-        gray: {
-          50: '#f9fafb',
-          100: '#f4f5f7',
-          200: '#e5e7eb',
-          300: '#d2d6dc',
-          400: '#9fa6b2',
-          500: '#6b7280',
-          600: '#4b5563',
-          700: '#374151',
-          800: '#252f3f',
-          900: '#161e2e',
-          950: '#0d1117',
+        primary: {
+          50: '#f5f3ff',
+          100: '#ede9fe',
+          200: '#ddd6fe',
+          300: '#c4b5fd',
+          400: '#a78bfa',
+          500: '#8b5cf6',
+          600: '#7c3aed',
+          700: '#6d28d9',
+          800: '#5b21b6',
+          900: '#4c1d95',
+          950: '#2e1065',
         },
         green: {
           50: '#f3faf7',
@@ -56,6 +56,20 @@ export default {
           800: '#723b13',
           900: '#633112',
         },
+        dark: {
+          100: '#1e1e1e',
+          200: '#1a1a1a',
+          300: '#151515',
+          400: '#121212',
+          500: '#0f0f0f',
+          600: '#0d0d0d',
+          700: '#0a0a0a',
+          800: '#080808',
+          900: '#050505',
+        }
+      },
+      fontFamily: {
+        sans: ['Inter', 'system-ui', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'Helvetica Neue', 'Arial', 'sans-serif'],
       },
     },
   },

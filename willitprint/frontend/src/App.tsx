@@ -1,7 +1,60 @@
-import { useState } from 'react'
+import { useState, Component, ErrorInfo, ReactNode } from 'react'
 import Layout from './components/Layout'
 import OptionForm from './components/OptionForm'
 import ResultsDisplay from './components/ResultsDisplay'
+
+// Error Boundary Component
+interface ErrorBoundaryProps {
+  children: ReactNode;
+  fallback?: ReactNode;
+  onError?: (error: Error, errorInfo: ErrorInfo) => void;
+}
+
+interface ErrorBoundaryState {
+  hasError: boolean;
+  error: Error | null;
+}
+
+class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
+  constructor(props: ErrorBoundaryProps) {
+    super(props);
+    this.state = { hasError: false, error: null };
+  }
+
+  static getDerivedStateFromError(error: Error): ErrorBoundaryState {
+    return { hasError: true, error };
+  }
+
+  componentDidCatch(error: Error, errorInfo: ErrorInfo): void {
+    console.error('Error boundary caught an error:', error, errorInfo);
+    this.props.onError?.(error, errorInfo);
+  }
+
+  render(): ReactNode {
+    if (this.state.hasError) {
+      if (this.props.fallback) {
+        return this.props.fallback;
+      }
+      
+      return (
+        <div className="glass-card p-8 mb-10 depth-effect">
+          <h3 className="text-xl font-bold mb-4 text-red-400">Something went wrong</h3>
+          <p className="text-gray-300 mb-4">
+            There was an error calculating your options data. Please try again with different inputs.
+          </p>
+          <button 
+            onClick={() => this.setState({ hasError: false, error: null })}
+            className="btn-primary px-4 py-2 rounded-md"
+          >
+            Try Again
+          </button>
+        </div>
+      );
+    }
+
+    return this.props.children;
+  }
+}
 
 // API URL
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001/api'
@@ -88,8 +141,8 @@ const clientSideAnalysis = (formData: any) => {
     memeVerdict = "🎲 CASINO ODDS DETECTED"
     commentary = `This play is like betting on black. You've got a shot, but don't bet the rent money.`
   } else {
-    memeVerdict = "💀 YOUR MONEY IS ALREADY DEAD"
-    commentary = `RIP to your premium. That money would've lasted longer if you'd just burned it for heat.`
+    memeVerdict = "💀 PROBABLY NOT PRINTING"
+    commentary = `This call is looking like a trip behind the Wendy's dumpster.`
   }
   
   return {
@@ -139,24 +192,74 @@ function App() {
     setResult(null)
   }
 
+  const handleErrorBoundaryError = (error: Error) => {
+    console.error("Error boundary caught an error:", error);
+    // Could add analytics or logging here
+  }
+
   return (
     <Layout>
-      <div className="py-6">
+      <div className="py-8 md:py-12 min-h-screen">
         {!result ? (
           <>
             <div className="text-center max-w-3xl mx-auto mb-10">
-              <h1 className="text-4xl font-bold mb-4 text-green-500">WillItPrint.ai 💎</h1>
-              <p className="text-gray-300 text-lg">
+              <div className="diamond-accent mb-4">
+                <h1 className="text-5xl md:text-6xl font-bold mb-6">
+                  <span className="gradient-text-large">WillItPrint.ai</span>
+                </h1>
+              </div>
+              <p className="text-gray-200 text-xl mb-10">
                 Your Degenerate Options Whisperer
               </p>
-              <p className="text-gray-400 mt-4">
-                Enter your YOLO contract. We'll tell you if you're printing tendies or headed straight to Valhalla.
+              
+              <div className="glass-card p-8 mb-10 depth-effect transform transition-all duration-300 hover:scale-[1.01]">
+                <div className="grid grid-cols-3 gap-4 md:gap-8">
+                  <div className="text-center">
+                    <div className="text-2xl sm:text-3xl md:text-4xl font-bold text-primary-400 mb-2">200,000+</div>
+                    <div className="text-gray-400 text-xs sm:text-sm">Trades Analyzed</div>
+                  </div>
+                  <div className="text-center">
+                    <div className="text-2xl sm:text-3xl md:text-4xl font-bold text-primary-400 mb-2">$400M+</div>
+                    <div className="text-gray-400 text-xs sm:text-sm">Portfolio Value</div>
+                  </div>
+                  <div className="text-center">
+                    <div className="text-2xl sm:text-3xl md:text-4xl font-bold text-primary-400 mb-2">45%</div>
+                    <div className="text-gray-400 text-xs sm:text-sm">Win Rate</div>
+                  </div>
+                </div>
+              </div>
+              
+              <p className="text-gray-300 text-lg max-w-2xl mx-auto animate-fade-in mb-6">
+                Enter your YOLO contract below. Our AI will analyze whether your options play will print tendies or leave you behind the Wendy's dumpster.
               </p>
             </div>
             <OptionForm onSubmit={handleSubmit} isLoading={isLoading} />
           </>
         ) : (
-          <ResultsDisplay result={result} onReset={handleReset} />
+          <ErrorBoundary 
+            onError={handleErrorBoundaryError}
+            fallback={
+              <div className="max-w-4xl mx-auto px-4">
+                <div className="glass-card p-8 mb-10 depth-effect">
+                  <h3 className="text-xl font-bold mb-4 text-red-400">Calculation Error</h3>
+                  <p className="text-gray-300 mb-4">
+                    There was an error calculating your options data. This might be due to invalid inputs or date values.
+                  </p>
+                  <button 
+                    onClick={handleReset}
+                    className="btn btn-secondary py-2.5 px-5 rounded-full transition-all text-sm flex items-center"
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                    </svg>
+                    Try Again
+                  </button>
+                </div>
+              </div>
+            }
+          >
+            <ResultsDisplay result={result} onReset={handleReset} />
+          </ErrorBoundary>
         )}
       </div>
     </Layout>

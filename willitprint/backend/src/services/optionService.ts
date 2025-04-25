@@ -7,6 +7,7 @@ interface OptionData {
   optionType: 'call' | 'put';
   premiumPaid: number;
   contracts: number;
+  realOptionData?: any; // Real option data from Polygon API
 }
 
 interface OptionProfitability {
