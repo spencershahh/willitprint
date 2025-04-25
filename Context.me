@@ -1,0 +1,176 @@
+# 💎 WillItPrint.ai 💥
+
+> "Your degenerate options whisperer."  
+> Enter your YOLO contract. We'll tell you if you're printing tendies or headed straight to Valhalla.
+
+---
+
+## 🧠 TL;DR – What Is This?
+
+WillItPrint.ai is a meme-powered webapp inspired by /r/wallstreetbets where users input their **options contracts** (like $GOOGL 155C expiring May 9), and the app calculates whether that play has a high probability of making money.
+
+We visualize:
+- Risk/reward
+- Breakeven price
+- Live value range of the contract
+- Degenerate-friendly commentary on whether it’ll “print” 💸 or flop 💀
+
+---
+
+## 💠 Tech Stack
+
+| Area            | Tech                            |
+|-----------------|---------------------------------|
+| Frontend        | React + TailwindCSS             |
+| Backend         | Express (Node.js) or Flask (Python) |
+| Data API        | Yahoo Finance / IEX Cloud / Polygon.io |
+| Options Calc    | Black-Scholes or custom engine  |
+| AI Commentary   | OpenAI GPT-4 API                |
+| Hosting         | Vercel (Frontend) + Render/Heroku (Backend) |
+
+---
+
+## ⚙️ Features
+
+### 🎯 User Input (Form)
+- **Ticker**: e.g. `GOOGL`
+- **Strike Price**: e.g. `$155`
+- **Expiration Date**: e.g. `May 9, 2025`
+- **Type**: `Call` or `Put`
+- **Premium Paid**: e.g. `$9.15`
+- **# of Contracts**: e.g. `1`
+
+### 📈 Output
+- Max Risk
+- Breakeven Price
+- Value Range of Option (over time and price targets)
+- Probability of Profit (simple %)
+- Heatmap of % return by price/time (optional)
+- **Meme Verdict** like:
+  - “🚀 This play might print tendies.”
+  - “💀 Your premium is already in the grave.”
+
+---
+
+## 📊 Option Math Details
+
+- Uses **Black-Scholes model** or links to OptionsProfitCalculator logic
+- Live pricing from finance APIs
+- Can pre-populate IV from API or use default (e.g. 25–35%)
+
+---
+
+## 🧠 AI Commentary
+
+Call the **OpenAI GPT-4 API** to generate:
+- Meme verdict
+- Quote-style commentary:  
+  > “If GOOGL hits $170 by May 9, you’re sipping margs on a yacht. If not… ramen aisle. 🍜📉”
+
+Prompt example:
+```
+Write a funny and sarcastic verdict for the following option trade:
+- Ticker: GOOGL
+- Strike: 155
+- Expiration: May 9, 2025
+- Type: Call
+- Premium: $9.15
+- Current Price: $166.95
+- Probability of Profit: 57.9%
+```
+
+---
+
+## 📁 Project Structure (Recommended)
+
+```
+willitprint-ai/
+│
+├── frontend/                # React frontend (Vite or Next.js)
+│   ├── public/
+│   ├── src/
+│   │   ├── components/
+│   │   ├── pages/
+│   │   └── App.tsx
+│   └── tailwind.config.js
+│
+├── backend/                 # Express or Flask backend
+│   ├── routes/
+│   ├── controllers/
+│   ├── services/            # Option pricing logic
+│   └── app.js or app.py
+│
+├── .env                     # Store API keys here
+├── README.md
+└── package.json / requirements.txt
+```
+
+---
+
+## 🔐 .env Example
+
+```
+# Finance API Keys
+YAHOO_API_KEY=your-key
+IEX_CLOUD_API=your-key
+
+# OpenAI
+OPENAI_API_KEY=your-key
+```
+
+---
+
+## 🚀 Deployment Plan
+
+| Layer     | Service       |
+|-----------|---------------|
+| Frontend  | Vercel        |
+| Backend   | Render / Heroku |
+| Domain    | willitprint.ai |
+| Storage   | N/A (stateless for now) |
+
+---
+
+## 🧪 Testing
+
+### Local
+```bash
+cd frontend
+npm run dev
+
+cd backend
+npm run start
+```
+
+### Test Example Request:
+```bash
+POST /analyze-option
+{
+  "ticker": "GOOGL",
+  "type": "call",
+  "strike": 155,
+  "expiration": "2025-05-09",
+  "premium": 9.15,
+  "contracts": 1
+}
+```
+
+---
+
+## 🧠 Future Features
+- 🔔 Email notifications if it starts printing
+- 🧠 Login to save plays
+- 🧪 Track multiple contracts
+- 🧰 Option chain visualizer
+- 📤 Reddit share embed
+
+---
+
+## 📢 Meme Legalese
+This is not financial advice. This is for apes, by apes. Consult a real human if you’re betting your house on YOLO calls.
+
+---
+
+## 💬 Questions?
+DM us at u/degenquant or @willitprint on X. Or just scream into the Reddit void.
+
